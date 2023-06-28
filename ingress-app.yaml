@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wordpress-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    #kubernetes.io/tls-acme: "true" #
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    #cert-manager.io/cluster-issuer: letsencrypt-staging #
+    #acme.cert-manager.io/http01-edit-in-place: "true" #
+
+spec:
+  ingressClassName: nginx
+  #tls:
+   # - hosts:
+    #- 'wordpress.54.144.169.119.traefik.me'
+    #- 'prometheus.35.229.20.209.nip.io'
+  #secretName: monitoring-cert
+  rules:
+    - host: 54.205.54.17.traefik.me # ingress load balancer dns
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wordpress # nome do serviço para qual o trafego esta sendo direcionado
+                port:
+                  number: 80
+    - host: 52.55.238.177.traefik.me
+      http:
+        paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: wordpress
+              port:
+                number: 80
