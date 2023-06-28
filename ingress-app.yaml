@@ -18,7 +18,7 @@ spec:
     #- 'prometheus.35.229.20.209.nip.io'
   #secretName: monitoring-cert
   rules:
-    - host: 54.205.54.17.traefik.me # ingress load balancer dns
+    - host: $first_ip.traefik.me # ingress load balancer dns
       http:
         paths:
           - path: /
@@ -28,7 +28,7 @@ spec:
                 name: wordpress # nome do serviço para qual o trafego esta sendo direcionado
                 port:
                   number: 80
-    - host: 52.55.238.177.traefik.me
+    - host: $second_ip.traefik.me
       http:
         paths:
         - pathType: Prefix
