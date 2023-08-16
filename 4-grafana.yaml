@@ -1,0 +1,17 @@
+---
+- name: Install and config wordpress
+  hosts: localhost
+
+  tasks:
+    - name: Add grafana repo
+      shell: "helm repo add grafana https://grafana.github.io/helm-charts"
+
+    - name: Update repo
+      shell: "helm repo update"
+
+    - name: Deploy latest version of grafana chart inside ingress namespace (and create it)
+      shell: "helm upgrade --install grafana grafana/grafana  --create-namespace -n grafana --set persistence.enabled=true --set adminPassword='EKS123' --values https://raw.githubusercontent.com/AndrewVictorSilva/apoioprojetofinal/main/grafana-data-source.yaml  --set service.type=NodePort"
+      # environment:
+      #   KUBECONFIG: /root/.kube/config
+    - name: Apply ingress rules with kubectl (on wordpress app namespace)
+      command: kubectl apply -f ./5-alb-grafana.yaml

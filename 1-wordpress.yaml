@@ -1,0 +1,19 @@
+---
+- name: Install and config wordpress
+  hosts: localhost
+
+  tasks:
+
+    - name: Add bitnami repo
+      shell: "helm repo add bitnami https://charts.bitnami.com/bitnami"
+
+    - name: Update repo
+      shell: "helm repo update"
+
+    - name: Deploy latest version of wordpress chart inside ingress namespace (and create it)
+      shell: "helm upgrade --install wordpress oci://registry-1.docker.io/bitnamicharts/wordpress -n wordpress --set service.type=NodePort --create-namespace"
+      # environment:
+      #   KUBECONFIG: /root/.kube/config
+
+    - name: Apply ingress rules with kubectl (on wordpress app namespace)
+      command: kubectl apply -f 2-alb-wordpress.yaml
